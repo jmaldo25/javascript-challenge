@@ -1,87 +1,53 @@
-// Level 1 & Level 2 - combined for multiple search criteria to filter table
+// Code for Level 1
 
 // from data.js
 var tableData = data;
 
-// Reference to the table body in html
-var tbody = d3.select("tbody");
+var table = d3.select('table');
+var tableBody = table.select('tbody')
+var filterBtn = d3.select('#filter-btn')
 
-// console.log(data);
+// Function to create the table and insert data into the table
+createTable(tableData, tableBody)
 
-// Create loop for data and create table update w/ data js file
-tableData.forEach((ufoReport) => {
-    var row = tbody.append("tr");
-    Object.entries(ufoReport).forEach(([key, value]) => {
-        var cell = row.append("td");
-        cell.text(value);
+// Setting up function to hold values
+let inputValues = {
+    datetime: '',
+  };
+  
+  // Set up keys for the input elements
+  const inputKeys = Object.keys(inputValues);
+  d3.selectAll('.form-control').each(function(d, i) {
+    this.setAttribute('name', inputKeys[i]);
+  });
+  
+  // Creating event listener
+  d3.selectAll('.form-control').on('change', event => (inputValues[d3.event.target.name] = d3.event.target.value));
+  
+  // Setting up event listener for button click
+  filterBtn.on('click', () => {
+    // Create function to filter values
+    const filterValues = Object.values(inputValues);
+    const tableRows = tableBody.selectAll('tr');
+    tableRows.each(function() {
+      let row = this;
+      // Display each row
+      row.style.display = '';
+      // Retrive table data
+      let td = row.getElementsByTagName('td');
+      // Put information into array for use
+      let tdArray = Array.from(td);
+      tdArray.forEach(function(td, tdIndex) {
+        let cell = row.getElementsByTagName('td')[tdIndex];
+        if (cell) {
+          if (filterValues[tdIndex]) {
+            // Set up for information not filtered to be displayed
+            if (row.style.display !== 'none' && cell.innerHTML.toUpperCase().indexOf(filterValues[tdIndex].toUpperCase()) > -1) {
+              return;
+            }
+            row.style.display = 'none';
+          }
+        }
+      });
     });
-});
-
-// Create input for button and reset
-var button = d3.select("#filter-btn")
-
-var resetButton = d3.select("#reset-filter-btn")
-
-// Set up event handlers
-button.on("click", function() {
-
-    // Set up for refresh by removing any previous table
-    d3.select("tbody").html("");
-
-    // Prevent page refresh
-    d3.event.preventDefault();
-
-    // Set up the select for the table and set to lowercase
-    var date = d3.select("#datetime").property("value");
-    var city = d3.select("#city").property("value").toLowerCase();
-    var state = d3.select("#state").property("value").toLowerCase();
-    var country = d3.select("#country").property("value").toLowerCase();
-    var shape = d3.select("#shape").property("value").toLowerCase();
-
-    // Set up new varible for saved data
-    filterData = tableData;
-
-    // Set up filter by search input
-    if (date) {
-        filterData = filterData.filter(record => record.datetime === date);
-    }
-    if (city) {
-        filterData = filterData.filter(record => record.city === city);
-    }
-    if (state) {
-        filterData = filterData.filter(record => record.state === state);
-    }
-    if (country) {
-        filterData = filterData.filter(record => record.country === country);
-    }
-    if (shape) {
-        filterData = filterData.filter(record => record.shape === shape);
-    }
-
-    // Display the filtered table
-    filterData.forEach((report) => {
-        var row = tbody.append('tr');
-        Object.entries(report).forEach(([key, value]) => {
-            //console.log(key, value);
-            var cell = row.append('td');
-            cell.text(value);
-        });
-    });
-});
-
-// Reset for the filter
-resetButton.on("click", () => {
-	tbody.html("");
-	tableData.forEach((report) => {
-    //console.log(report);
-    var row = tbody.append('tr');
- 
-// Build table
-Object.entries(report).forEach(([key, value]) => {
-    //console.log(key, value);
-    var cell = row.append('td');
-    cell.text(value);
-    }); 
-});
-
-console.log("Table reset") });
+  });
