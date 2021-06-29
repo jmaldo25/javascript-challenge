@@ -37,4 +37,34 @@ button.on("click", function() {
     var state = d3.select("#state").property("value").toLowerCase();
     var country = d3.select("#country").property("value").toLowerCase();
     var shape = d3.select("#shape").property("value").toLowerCase();
-})
+
+    // Set up new varible for saved data
+    filterData = tableData;
+
+    // Set up filter by search input
+    if (date) {
+        filterData = filterData.filter(record => record.datetime === date);
+    }
+    if (city) {
+        filterData = filterData.filter(record => record.city === city);
+    }
+    if (state) {
+        filterData = filterData.filter(record => record.state === state);
+    }
+    if (country) {
+        filterData = filterData.filter(record => record.country === country);
+    }
+    if (shape) {
+        filterData = filterData.filter(record => record.shape === shape);
+    }
+
+    // Display the filtered table
+    filterData.forEach((report) => {
+        var row = tbody.append('tr');
+        Object.entries(report).forEach(([key, value]) => {
+            //console.log(key, value);
+            var cell = row.append('td');
+            cell.text(value);
+        });
+    });
+});
