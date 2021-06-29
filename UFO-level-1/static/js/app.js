@@ -4,11 +4,11 @@
 var tableData = data;
 
 var table = d3.select('table');
-var tableBody = table.select('tbody')
-var filterBtn = d3.select('#filter-btn')
+var tableBody = table.select('tbody');
+var filterBtn = d3.select('#filter-btn');
 
 // Function to create the table and insert data into the table
-createTable(tableData, tableBody)
+createTable(tableData, tableBody);
 
 // Setting up function to hold values
 let inputValues = {
