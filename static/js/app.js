@@ -17,4 +17,7 @@ tableData.forEach((ufoReport) => {
     });
 });
 
+// Create input for button and reset
+var button = d3.select("#filter-btn")
 
+var resetButton = d3.select("#reset-filter-btn")
